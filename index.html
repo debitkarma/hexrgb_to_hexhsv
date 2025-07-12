@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex Color Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-color: #f0f2f5;
+            --card-background: #ffffff;
+            --text-color: #1c1e21;
+            --subtle-text-color: #606770;
+            --border-color: #ced0d4;
+            --primary-color: #0866ff;
+            --primary-hover-color: #0652cc;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: var(--subtle-text-color);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .converter-wrapper {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .input-section,
+        .output-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--subtle-text-color);
+        }
+
+        .hex-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .hex-input-wrapper:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(8, 102, 255, 0.2);
+        }
+
+        .hex-prefix {
+            padding: 0.75rem;
+            background-color: #f5f6f7;
+            color: var(--subtle-text-color);
+            font-weight: 500;
+        }
+
+        #hex-input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-family: 'Menlo', 'Consolas', monospace;
+            text-transform: uppercase;
+        }
+
+        #color-picker {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 44px;
+            height: 44px;
+            border: none;
+            cursor: pointer;
+            background-color: transparent;
+            padding: 4px;
+        }
+
+        #color-picker::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        #color-picker::-webkit-color-swatch {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 100px;
+            border-radius: 6px;
+            background-color: #eee;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+
+        #output-values {
+            background-color: #f5f6f7;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Menlo', 'Consolas', monospace;
+        }
+
+        #output-values p {
+            margin-bottom: 0.5rem;
+        }
+
+        #output-values p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .converter-wrapper {
+                flex-direction: column;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <div class="card">
+            <header>
+                <h1>Color Converter</h1>
+                <p>Enter a 6-digit hex code to see its other color model values.</p>
+            </header>
+            <div class="converter-wrapper">
+                <section class="input-section">
+                    <h2>Input</h2>
+                    <div class="input-group">
+                        <label for="hex-input">Hex Color Code</label>
+                        <div class="hex-input-wrapper">
+                            <span class="hex-prefix">#</span>
+                            <input type="text" id="hex-input" maxlength="6" placeholder="RRGGBB">
+                            <input type="color" id="color-picker" value="#FFFFFF">
+                        </div>
+                    </div>
+                </section>
+                <section class="output-section">
+                    <h2>Output</h2>
+                    <div id="color-preview" class="color-preview"></div>
+                    <div id="output-values">
+                        <p>HSV: <span id="hsv-output">---</span></p>
+                        <!-- You can add more output formats here -->
+                        <!-- e.g., <p>RGB: <span id="rgb-output">---</span></p> -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hexInput = document.getElementById('hex-input');
+            const colorPicker = document.getElementById('color-picker');
+            const colorPreview = document.getElementById('color-preview');
+            const hsvOutput = document.getElementById('hsv-output');
+
+            function updateColor(hex) {
+                const sanitizedHex = hex.startsWith('#') ? hex : `#${hex}`;
+                if (/^#[0-9A-F]{6}$/i.test(sanitizedHex)) {
+                    colorPreview.style.backgroundColor = sanitizedHex;
+                    colorPicker.value = sanitizedHex;
+                    // Update text input if it's not the source of the change
+                    if (hexInput.value.toUpperCase() !== sanitizedHex.substring(1).toUpperCase()) {
+                        hexInput.value = sanitizedHex.substring(1).toUpperCase();
+                    }
+                }
+            }
+
+            function handleConversion() {
+                const hex = hexInput.value.toUpperCase();
+                updateColor(hex);
+
+                if (/^[0-9A-F]{6}$/i.test(hex)) {
+                    // Here you would call your conversion logic.
+                    // For now, it's a placeholder.
+                    // The backend logic from your Python file would be implemented here in JS
+                    // or called via an API request.
+                    hsvOutput.textContent = `(Placeholder for #${hex})`;
+                } else {
+                    // Handle incomplete or invalid input by clearing the output
+                    hsvOutput.textContent = '---';
+                }
+            }
+
+            // Event Listeners
+            hexInput.addEventListener('input', handleConversion);
+
+            colorPicker.addEventListener('input', (e) => {
+                const hex = e.target.value.substring(1).toUpperCase();
+                hexInput.value = hex;
+                handleConversion();
+            });
+
+            // Initial state
+            const initialColor = '1a73e8'; // A nice blue
+            hexInput.value = initialColor.toUpperCase();
+            handleConversion();
+        });
+    </script>
+</body>
+
+</html>
